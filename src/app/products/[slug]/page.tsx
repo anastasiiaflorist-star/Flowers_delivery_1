@@ -10,15 +10,12 @@ import PortableTextRenderer from '@/components/PortableTextRenderer'
 import type { Metadata } from 'next'
 
 interface ProductDetailPageProps {
-  params: Promise<{ slug: string }>
+  params: { slug: string }
 }
 
 async function getProduct(slug: string): Promise<Product | null> {
   try {
-    const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
-    if (!projectId || projectId === 'your-project-id') {
-      return sampleProducts.find((p) => p.slug.current === slug) || null
-    }
+    if (!client) return sampleProducts.find((p) => p.slug.current === slug) || null
     const product = await client.fetch<Product>(PRODUCT_BY_SLUG_QUERY, { slug })
     if (product) return product
     return sampleProducts.find((p) => p.slug.current === slug) || null
@@ -29,10 +26,7 @@ async function getProduct(slug: string): Promise<Product | null> {
 
 export async function generateStaticParams() {
   try {
-    const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
-    if (!projectId || projectId === 'your-project-id') {
-      return sampleProducts.map((p) => ({ slug: p.slug.current }))
-    }
+    if (!client) return sampleProducts.map((p) => ({ slug: p.slug.current }))
     const slugs = await client.fetch<{ slug: string }[]>(PRODUCT_SLUGS_QUERY)
     return slugs.map((s) => ({ slug: s.slug }))
   } catch {
@@ -41,7 +35,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
-  const { slug } = await params
+  const { slug } = params
   const product = await getProduct(slug)
   if (!product) return { title: 'Product Not Found' }
   return {
@@ -51,7 +45,7 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const { slug } = await params
+  const { slug } = params
   const product = await getProduct(slug)
 
   if (!product) {

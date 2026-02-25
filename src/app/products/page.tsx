@@ -22,10 +22,7 @@ const CATEGORIES = [
 
 async function getAllProducts(): Promise<Product[]> {
   try {
-    const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
-    if (!projectId || projectId === 'your-project-id') {
-      return sampleProducts
-    }
+    if (!client) return sampleProducts
     const products = await client.fetch<Product[]>(ALL_PRODUCTS_QUERY)
     return products.length > 0 ? products : sampleProducts
   } catch {
@@ -34,11 +31,11 @@ async function getAllProducts(): Promise<Product[]> {
 }
 
 interface ProductsPageProps {
-  searchParams: Promise<{ category?: string }>
+  searchParams: { category?: string }
 }
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  const { category } = await searchParams
+  const { category } = searchParams
   const allProducts = await getAllProducts()
 
   const filtered = category

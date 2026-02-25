@@ -15,10 +15,7 @@ export const metadata: Metadata = {
 
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
-    const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
-    if (!projectId || projectId === 'your-project-id') {
-      return sampleProducts.filter((p) => p.featured)
-    }
+    if (!client) return sampleProducts.filter((p) => p.featured)
     const products = await client.fetch<Product[]>(FEATURED_PRODUCTS_QUERY)
     return products.length > 0 ? products : sampleProducts.filter((p) => p.featured)
   } catch {
