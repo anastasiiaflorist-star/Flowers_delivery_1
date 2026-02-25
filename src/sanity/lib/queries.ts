@@ -14,6 +14,11 @@ export const ALL_PRODUCTS_QUERY = groq`
       asset,
       hotspot,
       crop
+    },
+    videos[] {
+      _key,
+      caption,
+      asset->{ url }
     }
   }
 `
@@ -51,6 +56,11 @@ export const PRODUCT_BY_SLUG_QUERY = groq`
       asset,
       hotspot,
       crop
+    },
+    videos[] {
+      _key,
+      caption,
+      asset->{ url }
     }
   }
 `

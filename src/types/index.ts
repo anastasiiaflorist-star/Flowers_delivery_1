@@ -19,6 +19,18 @@ export interface SanityImage {
   }
 }
 
+export interface SanityVideoAsset {
+  _ref: string
+  _type: 'reference'
+  url?: string // resolved by GROQ asset->url
+}
+
+export interface SanityVideo {
+  _key?: string
+  asset: SanityVideoAsset
+  caption?: string
+}
+
 export interface Product {
   _id: string
   title: string
@@ -31,4 +43,5 @@ export interface Product {
   featured: boolean
   tags?: string[]
   images?: SanityImage[]
+  videos?: SanityVideo[]
 }

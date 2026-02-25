@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --color-cream: #fdf8f4;
+  --color-cream: #fffcf9;
   --color-parchment: #f9f3ec;
   --color-blush: #f9d4dc;
   --color-rose: #e8a0a8;
@@ -51,7 +51,7 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #fdf8f4;
+  background: #fffcf9;
 }
 ::-webkit-scrollbar-thumb {
   background-color: #f9d4dc;

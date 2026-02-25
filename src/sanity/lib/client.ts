@@ -6,7 +6,7 @@ export const client = projectId
   ? createClient({ projectId, dataset, apiVersion, useCdn: true })
   : null
 
-// Authenticated server-side client (bypasses CDN, for fresh data + drafts)
+// Authenticated server-side client (bypasses CDN, for fresh data)
 export const serverClient = projectId
   ? createClient({
       projectId,
@@ -14,5 +14,6 @@ export const serverClient = projectId
       apiVersion,
       useCdn: false,
       token,
+      perspective: 'published',
     })
   : null

@@ -4,29 +4,27 @@ import Link from 'next/link'
 import { useState } from 'react'
 
 const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/products', label: 'Shop' },
+  { href: '/products?category=baskets', label: 'Baskets' },
   { href: '/products?category=bouquets', label: 'Bouquets' },
-  { href: '/products?category=flower-boxes', label: 'Flower Boxes' },
-  { href: '/products?category=gifts-balloons', label: 'Gifts & Balloons' },
+  { href: '/products?category=flowers-in-a-box', label: 'Flowers in a Box' },
+  { href: '/#about', label: 'About Me' },
 ]
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header className="w-full sticky top-0 z-50 bg-[#fdf8f4]/95 backdrop-blur-sm border-b border-pink-100 shadow-sm">
+    <header className="w-full sticky top-0 z-50 bg-cream/95 backdrop-blur-sm border-b border-blush-light shadow-sm">
       {/* Announcement bar */}
-      <div className="bg-[#f9d4dc] text-[#7a3a44] text-center text-xs py-2 px-4 font-medium tracking-wide">
-        Free delivery on orders over $190 · Open 7 days a week
+      <div className="bg-blush-light text-dark-wine text-center text-xs py-2 px-4 font-medium tracking-wide">
+        Free delivery on orders over €190 · Open 7 days a week
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-2xl">🌸</span>
-            <span className="text-xl font-serif font-semibold text-[#7a3a44] group-hover:text-[#c0516a] transition-colors">
+            <span className="text-xl font-serif font-semibold text-dark-wine group-hover:text-primary transition-colors">
               La Fleur
             </span>
           </Link>
@@ -37,7 +35,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-[#5a3a3a] hover:text-[#c0516a] transition-colors"
+                className="text-base font-medium text-dark-muted hover:text-primary transition-colors"
               >
                 {link.label}
               </Link>
@@ -46,7 +44,7 @@ export default function Navbar() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 rounded-md text-[#7a3a44] hover:bg-pink-50"
+            className="md:hidden p-2 rounded-md text-dark-wine hover:bg-blush-soft"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
@@ -63,7 +61,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-[#5a3a3a] hover:text-[#c0516a] transition-colors py-1"
+                className="text-base font-medium text-dark-muted hover:text-primary transition-colors py-1"
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}

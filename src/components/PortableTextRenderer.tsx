@@ -24,14 +24,14 @@ export default function PortableTextRenderer({ value }: PortableTextRendererProp
 
         switch (block.style) {
           case 'h1':
-            return <h1 key={block._key} className="text-2xl font-serif font-bold text-[#3a1e1e] mb-3">{text}</h1>
+            return <h1 key={block._key} className="text-2xl font-serif font-bold text-dark mb-3">{text}</h1>
           case 'h2':
-            return <h2 key={block._key} className="text-xl font-serif font-bold text-[#3a1e1e] mb-3">{text}</h2>
+            return <h2 key={block._key} className="text-xl font-serif font-bold text-dark mb-3">{text}</h2>
           case 'h3':
-            return <h3 key={block._key} className="text-lg font-serif font-semibold text-[#3a1e1e] mb-2">{text}</h3>
+            return <h3 key={block._key} className="text-lg font-serif font-semibold text-dark mb-2">{text}</h3>
           default:
             return (
-              <p key={block._key} className="text-[#5a3a3a] leading-relaxed mb-3">
+              <p key={block._key} className="text-dark-muted leading-relaxed mb-3">
                 {block.children?.map((child) => {
                   if (child.marks?.includes('strong')) {
                     return <strong key={child._key}>{child.text}</strong>

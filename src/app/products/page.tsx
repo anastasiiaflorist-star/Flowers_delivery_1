@@ -14,17 +14,15 @@ export const metadata: Metadata = {
 
 const CATEGORIES = [
   { value: '', label: 'All' },
+  { value: 'baskets', label: 'Baskets' },
   { value: 'bouquets', label: 'Bouquets' },
-  { value: 'flower-boxes', label: 'Flower Boxes' },
-  { value: 'arrangements', label: 'Arrangements' },
-  { value: 'gifts-balloons', label: 'Gifts & Balloons' },
-  { value: 'wedding', label: 'Wedding' },
+  { value: 'flowers-in-a-box', label: 'Flowers in a Box' },
 ]
 
 async function getAllProducts(): Promise<Product[]> {
   try {
     if (!serverClient) return sampleProducts
-    const products = await serverClient.fetch<Product[]>(ALL_PRODUCTS_QUERY)
+    const products = await serverClient.fetch<Product[]>(ALL_PRODUCTS_QUERY, {}, { cache: 'no-store' })
     return products.length > 0 ? products : sampleProducts
   } catch (err) {
     console.error('Failed to fetch products from Sanity:', err)
@@ -47,21 +45,21 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const activeCategory = CATEGORIES.find((c) => c.value === (category || '')) || CATEGORIES[0]
 
   return (
-    <div className="bg-[#fdf8f4] min-h-screen">
+    <div className="bg-cream min-h-screen">
       {/* Page header */}
-      <div className="bg-gradient-to-b from-[#fce8ed] to-[#fdf8f4] py-14 text-center">
-        <p className="text-sm font-medium tracking-[0.2em] text-[#c0516a] uppercase mb-2">
+      <div className="bg-gradient-to-b from-blush-pale to-cream py-14 text-center">
+        <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-2">
           Our Collection
         </p>
-        <h1 className="text-5xl font-serif font-bold text-[#3a1e1e] mb-4">
+        <h1 className="text-5xl font-serif font-bold text-dark mb-4">
           {category ? activeCategory.label : 'All Products'}
         </h1>
-        <p className="text-[#7a5a5a] max-w-lg mx-auto">
+        <p className="text-muted max-w-lg mx-auto">
           Handcrafted with the freshest blooms from around the world. Every arrangement made with love.
         </p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Category filter */}
         <div className="flex flex-wrap gap-2 mb-10 justify-center">
           {CATEGORIES.map((cat) => {
@@ -72,8 +70,8 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 href={cat.value ? `/products?category=${cat.value}` : '/products'}
                 className={`px-5 py-2 rounded-full border text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-[#c0516a] border-[#c0516a] text-white shadow-sm'
-                    : 'border-pink-200 text-[#7a3a44] hover:bg-[#f9d4dc] hover:border-[#f9d4dc]'
+                    ? 'bg-primary border-primary text-white shadow-sm'
+                    : 'border-blush-light text-dark-wine hover:bg-blush-light hover:border-blush-light'
                 }`}
               >
                 {cat.label}
@@ -81,13 +79,6 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             )
           })}
         </div>
-
-        {/* Results count */}
-        <p className="text-sm text-[#7a5a5a] mb-6">
-          Showing <span className="font-semibold text-[#3a1e1e]">{filtered.length}</span> arrangement
-          {filtered.length !== 1 ? 's' : ''}
-          {category ? ` in "${activeCategory.label}"` : ''}
-        </p>
 
         {/* Grid */}
         {filtered.length > 0 ? (
@@ -98,14 +89,13 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           </div>
         ) : (
           <div className="text-center py-20">
-            <p className="text-6xl mb-4">🌿</p>
-            <h3 className="text-xl font-serif font-semibold text-[#3a1e1e] mb-2">No arrangements found</h3>
-            <p className="text-[#7a5a5a] mb-6">
+            <h3 className="text-xl font-serif font-semibold text-dark mb-2">No arrangements found</h3>
+            <p className="text-muted mb-6">
               We don&apos;t have any products in this category right now. Check back soon!
             </p>
             <a
               href="/products"
-              className="inline-flex items-center gap-2 bg-[#c0516a] text-white px-8 py-3 rounded-full font-medium hover:bg-[#a03d54] transition-colors"
+              className="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-medium hover:bg-primary-dark transition-colors"
             >
               View All Products
             </a>
