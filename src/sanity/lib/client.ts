@@ -1,17 +1,18 @@
-import { createClient, type SanityClient } from 'next-sanity'
-import { apiVersion, dataset, projectId } from '../env'
+import { createClient } from 'next-sanity'
+import { apiVersion, dataset, projectId, token } from '../env'
 
-let _client: SanityClient | null = null
-
-export function getClient(): SanityClient | null {
-  if (!projectId) return null
-  if (!_client) {
-    _client = createClient({ projectId, dataset, apiVersion, useCdn: true })
-  }
-  return _client
-}
-
-// Convenience export — may be null if projectId is not configured
+// Public read-only client (uses CDN, for SSG/ISR)
 export const client = projectId
   ? createClient({ projectId, dataset, apiVersion, useCdn: true })
+  : null
+
+// Authenticated server-side client (bypasses CDN, for fresh data + drafts)
+export const serverClient = projectId
+  ? createClient({
+      projectId,
+      dataset,
+      apiVersion,
+      useCdn: false,
+      token,
+    })
   : null

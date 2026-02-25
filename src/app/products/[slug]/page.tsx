@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { client } from '@/sanity/lib/client'
+import { serverClient } from '@/sanity/lib/client'
 import { PRODUCT_BY_SLUG_QUERY, PRODUCT_SLUGS_QUERY } from '@/sanity/lib/queries'
 import { Product } from '@/types'
 import { urlFor } from '@/sanity/lib/image'
@@ -9,25 +9,28 @@ import { sampleProducts } from '@/lib/sampleData'
 import PortableTextRenderer from '@/components/PortableTextRenderer'
 import type { Metadata } from 'next'
 
+export const revalidate = 60 // revalidate every 60 seconds
+
 interface ProductDetailPageProps {
   params: { slug: string }
 }
 
 async function getProduct(slug: string): Promise<Product | null> {
   try {
-    if (!client) return sampleProducts.find((p) => p.slug.current === slug) || null
-    const product = await client.fetch<Product>(PRODUCT_BY_SLUG_QUERY, { slug })
+    if (!serverClient) return sampleProducts.find((p) => p.slug.current === slug) || null
+    const product = await serverClient.fetch<Product>(PRODUCT_BY_SLUG_QUERY, { slug })
     if (product) return product
     return sampleProducts.find((p) => p.slug.current === slug) || null
-  } catch {
+  } catch (err) {
+    console.error('Failed to fetch product from Sanity:', err)
     return sampleProducts.find((p) => p.slug.current === slug) || null
   }
 }
 
 export async function generateStaticParams() {
   try {
-    if (!client) return sampleProducts.map((p) => ({ slug: p.slug.current }))
-    const slugs = await client.fetch<{ slug: string }[]>(PRODUCT_SLUGS_QUERY)
+    if (!serverClient) return sampleProducts.map((p) => ({ slug: p.slug.current }))
+    const slugs = await serverClient.fetch<{ slug: string }[]>(PRODUCT_SLUGS_QUERY)
     return slugs.map((s) => ({ slug: s.slug }))
   } catch {
     return sampleProducts.map((p) => ({ slug: p.slug.current }))

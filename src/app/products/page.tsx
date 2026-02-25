@@ -1,12 +1,13 @@
-import { client } from '@/sanity/lib/client'
+import { serverClient } from '@/sanity/lib/client'
 import { ALL_PRODUCTS_QUERY } from '@/sanity/lib/queries'
 import { Product } from '@/types'
 import { sampleProducts } from '@/lib/sampleData'
 import ProductCard from '@/components/ProductCard'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic' // category filtering via searchParams
+
 export const metadata: Metadata = {
-  title: 'Shop All Flowers & Arrangements',
   description:
     'Browse our complete collection of luxury bouquets, flower boxes, gifts, and arrangements. Same-day delivery available.',
 }
@@ -22,10 +23,11 @@ const CATEGORIES = [
 
 async function getAllProducts(): Promise<Product[]> {
   try {
-    if (!client) return sampleProducts
-    const products = await client.fetch<Product[]>(ALL_PRODUCTS_QUERY)
+    if (!serverClient) return sampleProducts
+    const products = await serverClient.fetch<Product[]>(ALL_PRODUCTS_QUERY)
     return products.length > 0 ? products : sampleProducts
-  } catch {
+  } catch (err) {
+    console.error('Failed to fetch products from Sanity:', err)
     return sampleProducts
   }
 }

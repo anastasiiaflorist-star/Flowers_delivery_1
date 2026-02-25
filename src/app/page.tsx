@@ -1,24 +1,26 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { client } from '@/sanity/lib/client'
+import { serverClient } from '@/sanity/lib/client'
 import { FEATURED_PRODUCTS_QUERY } from '@/sanity/lib/queries'
 import { Product } from '@/types'
 import { sampleProducts } from '@/lib/sampleData'
 import ProductCard from '@/components/ProductCard'
 import type { Metadata } from 'next'
 
+export const revalidate = 60 // revalidate every 60 seconds
+
 export const metadata: Metadata = {
-  title: 'Luxury Flower Shop — La Fleur',
   description:
     'Handcrafted luxury bouquets and floral arrangements. Same-day flower delivery. Fresh flowers from around the world.',
 }
 
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
-    if (!client) return sampleProducts.filter((p) => p.featured)
-    const products = await client.fetch<Product[]>(FEATURED_PRODUCTS_QUERY)
+    if (!serverClient) return sampleProducts.filter((p) => p.featured)
+    const products = await serverClient.fetch<Product[]>(FEATURED_PRODUCTS_QUERY)
     return products.length > 0 ? products : sampleProducts.filter((p) => p.featured)
-  } catch {
+  } catch (err) {
+    console.error('Failed to fetch featured products from Sanity:', err)
     return sampleProducts.filter((p) => p.featured)
   }
 }
