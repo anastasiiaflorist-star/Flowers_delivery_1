@@ -128,7 +128,12 @@ export default function ProductGallery({ images, videos, title, featured }: Prod
                 <Image src={item.thumb} alt={item.alt} fill className="object-cover" sizes="80px" />
               ) : (
                 <div className="absolute inset-0 bg-dark/10 flex items-center justify-center bg-blush-pale">
-                  <Image src={allMedia[0].thumb} alt={allMedia[0].alt} fill className="object-cover" sizes="80px" />
+                  {(() => {
+                    const firstImage = allMedia.find((m): m is Extract<typeof m, { type: 'image' }> => m.type === 'image')
+                    return firstImage ? (
+                      <Image src={firstImage.thumb} alt={firstImage.alt} fill className="object-cover" sizes="80px" />
+                    ) : null
+                  })()}
                   {/* Play icon */}
                   <svg className="w-7 absolute rounded-full border-[1px] bg-white text-primary left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-7 text-dark/60" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7L8 5z" />
