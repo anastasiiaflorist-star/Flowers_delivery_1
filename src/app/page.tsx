@@ -61,7 +61,6 @@ export default async function HomePage() {
   return (
     <>
       <section className="relative flex items-center overflow-hidden" style={{ backgroundImage: "url('/hero-bg.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        {/* Overlay */}
         <div className="absolute inset-0 bg-white/55 backdrop-blur-[2px]" />
 
         <div className="relative z-10 max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-20">
