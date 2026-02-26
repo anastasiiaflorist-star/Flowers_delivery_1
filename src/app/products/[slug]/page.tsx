@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
   if (!product) return { title: 'Product Not Found' }
   return {
     title: product.title,
-    description: product.shortDescription || `${product.title} — luxury floral arrangement by La Fleur.`,
+    description: product.shortDescription || `${product.title} — luxury floral arrangement by Fleuri.`,
   }
 }
 
@@ -61,13 +61,13 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     alt: product.title,
   }))
   const galleryVideos = (product.videos || []).map((v) => ({
-    url: v.asset.url || '',
-    caption: v.caption,
+    url: v?.url || '',
+    caption: v?.caption || '',
   }))
 
   const categoryLabel =
     product.category
-      ? product.category.replace('-', ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+      ? product.category.replaceAll('-', ' ').replace(/\b\w/g, (c) => c.toUpperCase())
       : null
 
   return (
@@ -116,9 +116,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               {product.title}
             </h1>
 
-            {product.shortDescription && (
+            {/* {product.shortDescription && (
               <p className="text-muted text-lg mb-5">{product.shortDescription}</p>
-            )}
+            )} */}
 
             <div className="flex items-baseline gap-3 mb-6">
               <span className="text-3xl font-bold text-dark">€{product.price.toFixed(2)}</span>

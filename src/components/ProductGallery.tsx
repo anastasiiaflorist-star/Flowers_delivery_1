@@ -39,23 +39,31 @@ export default function ProductGallery({ images, videos, title, featured }: Prod
     <div className="space-y-4">
       {/* Main display */}
       <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-blush-pale shadow-md">
-        {active.type === 'image' ? (
-          <Image
-            src={active.url}
-            alt={active.alt}
-            fill
-            className="object-cover"
-            priority
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
-        ) : (
-          <video
-            ref={videoRef}
-            src={active.url}
-            controls
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+        {allMedia.map((item, idx) =>
+          item.type === 'image' ? (
+            <Image
+              key={idx}
+              src={item.url}
+              alt={item.alt}
+              fill
+              className={`object-cover transition-opacity duration-500 ease-in-out ${idx === activeIndex ? 'opacity-100' : 'opacity-0'}`}
+              priority={idx === 0}
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
+          ) : (
+            <video
+              key={idx}
+              muted
+              autoPlay
+              controls
+              loop
+              controlsList="nodownload nofullscreen noremoteplayback"
+              ref={videoRef}
+              src={item.url}
+              playsInline
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out ${idx === activeIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            />
+          )
         )}
 
         {/* Bestseller badge */}
@@ -120,8 +128,9 @@ export default function ProductGallery({ images, videos, title, featured }: Prod
                 <Image src={item.thumb} alt={item.alt} fill className="object-cover" sizes="80px" />
               ) : (
                 <div className="absolute inset-0 bg-dark/10 flex items-center justify-center bg-blush-pale">
+                  <Image src={allMedia[0].thumb} alt={allMedia[0].alt} fill className="object-cover" sizes="80px" />
                   {/* Play icon */}
-                  <svg className="w-7 h-7 text-dark/60" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 absolute rounded-full border-[1px] bg-white text-primary left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-7 text-dark/60" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7L8 5z" />
                   </svg>
                 </div>

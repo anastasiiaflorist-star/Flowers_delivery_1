@@ -64,7 +64,7 @@ async function run() {
     price: 150,
     shortDescription:
       "A charming flower box with roses and hydrangeas — a lovely gift for any occasion",
-    category: "flowers-in-a-box",
+    category: "flowers in a box",
     inStock: true,
     featured: true,
     tags: ["roses", "hydrangeas", "flower box"],

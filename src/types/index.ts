@@ -19,15 +19,9 @@ export interface SanityImage {
   }
 }
 
-export interface SanityVideoAsset {
-  _ref: string
-  _type: 'reference'
-  url?: string // resolved by GROQ asset->url
-}
-
 export interface SanityVideo {
   _key?: string
-  asset: SanityVideoAsset
+  url?: string // resolved by GROQ as asset.asset->url
   caption?: string
 }
 

@@ -26,7 +26,7 @@ const config: Config = {
           light: '#f9d4dc',
           border: '#f0d8dc',
         },
-        cream: '#fffcf9',
+        cream: '#f5ede5',
         parchment: '#f9f3ec',
       },
       fontFamily: {

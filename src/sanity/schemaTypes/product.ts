@@ -82,7 +82,7 @@ export const productSchema = defineType({
         list: [
           { title: 'Baskets', value: 'baskets' },
           { title: 'Bouquets', value: 'bouquets' },
-          { title: 'Flowers in a Box', value: 'flowers-in-a-box' },
+          { title: 'Flowers in a Box', value: 'flowers in a box' },
         ],
       },
     }),

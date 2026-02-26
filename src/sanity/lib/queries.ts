@@ -18,7 +18,7 @@ export const ALL_PRODUCTS_QUERY = groq`
     videos[] {
       _key,
       caption,
-      asset->{ url }
+      "url": asset.asset->url
     }
   }
 `
@@ -60,7 +60,7 @@ export const PRODUCT_BY_SLUG_QUERY = groq`
     videos[] {
       _key,
       caption,
-      asset->{ url }
+      "url": asset.asset->url
     }
   }
 `
@@ -68,5 +68,37 @@ export const PRODUCT_BY_SLUG_QUERY = groq`
 export const PRODUCT_SLUGS_QUERY = groq`
   *[_type == "product"] {
     "slug": slug.current
+  }
+`
+
+export const HOME_IMAGES_QUERY = groq`
+  *[_type == "siteSettings"][0] {
+    aboutImages[] {
+      asset,
+      hotspot,
+      crop
+    },
+    servicesImages[] {
+      asset,
+      hotspot,
+      crop
+    }
+  }
+`
+
+export const TABLE_STYLING_QUERY = groq`
+  *[_type == "tableStyling"][0] {
+    intro,
+    body,
+    images[] {
+      asset,
+      hotspot,
+      crop
+    },
+    videos[] {
+      _key,
+      caption,
+      "url": asset.asset->url
+    }
   }
 `

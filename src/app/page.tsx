@@ -1,11 +1,11 @@
 import Link from 'next/link'
-import Image from 'next/image'
-import photo2 from './images/photo_2.jpg'
 import { serverClient } from '@/sanity/lib/client'
-import { FEATURED_PRODUCTS_QUERY } from '@/sanity/lib/queries'
+import { FEATURED_PRODUCTS_QUERY, HOME_IMAGES_QUERY } from '@/sanity/lib/queries'
 import { Product } from '@/types'
 import { sampleProducts } from '@/lib/sampleData'
 import ProductCard from '@/components/ProductCard'
+import ImageCarousel from '@/components/ImageCarousel'
+import { urlFor } from '@/sanity/lib/image'
 import type { Metadata } from 'next'
 
 export const revalidate = 60 // revalidate every 60 seconds
@@ -26,8 +26,37 @@ async function getFeaturedProducts(): Promise<Product[]> {
   }
 }
 
+interface HomeImages {
+  aboutImages?: { asset: object; hotspot?: object; crop?: object }[]
+  servicesImages?: { asset: object; hotspot?: object; crop?: object }[]
+}
+
+async function getHomeImages(): Promise<HomeImages> {
+  try {
+    if (!serverClient) return {}
+    const data = await serverClient.fetch<HomeImages>(HOME_IMAGES_QUERY, {}, { cache: 'no-store' })
+    return data ?? {}
+  } catch (err) {
+    console.error('Failed to fetch home images from Sanity:', err)
+    return {}
+  }
+}
+
 export default async function HomePage() {
-  const featuredProducts = await getFeaturedProducts()
+  const [featuredProducts, homeImages] = await Promise.all([
+    getFeaturedProducts(),
+    getHomeImages(),
+  ])
+
+  const aboutImageList = (homeImages.aboutImages ?? []).map((img) => ({
+    url: urlFor(img).width(900).height(1125).fit('crop').url(),
+    alt: 'About Me',
+  }))
+
+  const servicesImageList = (homeImages.servicesImages ?? []).map((img) => ({
+    url: urlFor(img).width(900).height(1125).fit('crop').url(),
+    alt: 'Services',
+  }))
 
   return (
     <>
@@ -49,7 +78,7 @@ export default async function HomePage() {
             </h1>
             <p className="text-center text-lg text-muted max-w-[42rem] leading-relaxed mb-8">
               Handcrafted luxury bouquets and arrangements made with the freshest blooms
-              from around the world. Available for same-day delivery, 7 days a week.
+              from around the world. Freshness Guaranteed.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
@@ -72,9 +101,9 @@ export default async function HomePage() {
             {/* Trust badges */}
             <div className="flex flex-wrap gap-6 mt-10 pt-10 border-t border-blush-border">
               {[
-                { label: 'Same-day delivery' },
-                { label: '3-day freshness guarantee' },
-                { label: 'Premium Dutch flowers' },
+                { label: 'Unique Designs' },
+                { label: 'Freshness Guaranteed' },
+                { label: 'Premium flowers' },
               ].map((badge) => (
                 <div key={badge.label} className="flex items-center gap-2">
                   <span className="text-s text-muted font-medium">{badge.label}</span>
@@ -91,15 +120,21 @@ export default async function HomePage() {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-wrap gap-3 justify-center">
             {[
-              { label: 'All', href: '/products' },
-              { label: 'Baskets', href: '/products?category=baskets' },
-              { label: 'Bouquets', href: '/products?category=bouquets' },
-              { label: 'Flowers in a Box', href: '/products?category=flowers-in-a-box' },
+              { label: 'All', href: '/products', active: false },
+              { label: 'Bestsellers', href: '/products?category=bestsellers', active: true },
+              { label: 'Baskets', href: '/products?category=baskets', active: false },
+              { label: 'Bouquets', href: '/products?category=bouquets', active: false },
+              { label: 'Flowers in a Box', href: '/products?category=flowers in a box', active: false },
+              { label: 'Table Styling', href: '/table-styling', active: false },
             ].map((cat) => (
               <Link
                 key={cat.href}
                 href={cat.href}
-                className="px-5 py-2 rounded-full border border-blush-light text-sm font-medium text-dark-wine hover:bg-blush-light hover:border-blush-light transition-colors"
+                className={`px-5 py-2 rounded-full border text-sm font-medium transition-colors ${
+                  cat.active
+                    ? 'bg-primary border-primary text-white shadow-sm'
+                    : 'border-blush-light text-dark-wine hover:bg-blush-light hover:border-blush-light'
+                }`}
               >
                 {cat.label}
               </Link>
@@ -109,7 +144,7 @@ export default async function HomePage() {
       </section>
 
       {/* ─── BESTSELLERS ────────────────────────────────────────────── */}
-      <section className="py-20 bg-cream">
+      <section id="bestsellers" className="py-20 bg-cream">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-2">
@@ -142,59 +177,35 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ─── DELIVERY BANNER ────────────────────────────────────────── */}
-      <section className="bg-primary text-white py-14">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            {[
-              {
-                title: 'Delivery Within 1 Hour',
-                desc: 'If flowers are in stock and you are within our delivery zone.',
-              },
-              {
-                title: 'Fresh Flowers',
-                desc: 'Sourced from the Netherlands, Ecuador, Kenya, Colombia and more.',
-              },
-              {
-                title: 'Order by Phone',
-                desc: 'Call +33 6 80 86 95 74 to order or customise your bouquet.',
-              },
-            ].map((item) => (
-              <div key={item.title} className="flex flex-col items-center">
-                <h3 className="font-serif font-semibold text-lg mb-1">{item.title}</h3>
-                <p className="text-sm text-pink-100 max-w-xs">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* ─── WHY US ─────────────────────────────────────────────────── */}
       <section className="py-20 bg-white">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
-            <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-2">
-              Why Choose Me
-            </p>
-            <h2 className="text-4xl font-serif font-bold text-dark">Why Me</h2>
+            <h2 className="text-4xl font-serif font-bold text-dark">Why Choose Our Bouquets</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="flex flex-wrap justify-center gap-10">
             {[
               {
-                title: '3-Day Freshness Guarantee',
-                desc: "I am committed to delivering only the freshest flowers. If your bouquet wilts within 3 days and all care instructions were followed, I'll replace it free of charge.",
+                title: 'Premium Flowers Only',
+                desc: "You pay exclusively for flowers. We do not use filler greenery to artificially increase volume — every stem is a premium bloom.",
               },
               {
-                title: 'Exceptional Service',
-                desc: 'I am here to assist you every step of the way — from selecting the perfect bouquet to ensuring timely delivery. Your satisfaction is my priority.',
+                title: 'Freshness Guaranteed',
+                desc: 'Each bouquet is delivered in a water-filled aqua box, ensuring the flowers remain hydrated and flawless during transportation.',
               },
               {
-                title: 'Thoughtful Packaging',
-                desc: 'Each bouquet is delivered in an aqua pack to keep blooms hydrated, inside a protective box. I include flower food, care instructions, and a complimentary card.',
+                title: 'Refined Presentation',
+                desc: 'Our bouquets are wrapped in high-quality floral wrapping that enhances their luxurious appearance and finished with our signature premium ribbon featuring our logo — a mark of quality and craftsmanship.',
+              },
+              {
+                title: 'Protected Delivery',
+                desc: 'Every arrangement is provided with a protective carrier to ensure safe, elegant, and damage-free transport.',
               },
             ].map((item) => (
-              <div key={item.title} className="text-center p-8 rounded-3xl bg-cream hover:shadow-md transition-shadow">
+              <div key={item.title} className="w-full md:w-[calc(33.333%-1.667rem)] text-center p-8 rounded-3xl bg-cream hover:shadow-md transition-shadow">
                 <h3 className="font-serif font-semibold text-lg text-dark mb-3">{item.title}</h3>
                 <p className="text-sm text-muted leading-relaxed">{item.desc}</p>
               </div>
@@ -203,144 +214,134 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ─── ABOUT ME ───────────────────────────────────────────────── */}
-      <section id="about" className="py-20 bg-blush-soft">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Photo */}
-            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-xl">
-              <Image
-                src={photo2}
-                alt="About Me"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-
-            {/* Text */}
-            <div>
-              <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-2">
-                A Little About Me
-              </p>
-              <h2 className="text-4xl font-serif font-bold text-dark mb-8">About Me</h2>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3 text-dark-muted text-lg leading-relaxed">
-                  <span className="text-primary mt-1">•</span>
-                  <span>5 years of experience in the flower business</span>
-                </li>
-                <li className="flex items-start gap-3 text-dark-muted text-lg leading-relaxed">
-                  <span className="text-primary mt-1">•</span>
-                  <span>Each flower is high quality ✨</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── PACKAGING ──────────────────────────────────────────────── */}
+      {/* ─── SERVICES ───────────────────────────────────────────────── */}
       <section className="py-20 bg-white">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Text */}
-            <div>
-              <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-2">
-                Presentation Matters
-              </p>
-              <h2 className="text-4xl font-serif font-bold text-dark mb-6">Packaging</h2>
-              <p className="text-muted leading-relaxed mb-4">
-                All my bouquets come with paper wrapping, a signature ribbon, an aqua box, and a craft bag for
-                comfortable transportation. I also provide flower food, care tips, and a complimentary note card.
-              </p>
-              <p className="text-muted leading-relaxed mb-8">
-                I believe in providing a complete package to ensure your flowers are beautifully presented and
-                well-cared for — from the moment they leave my studio to when they arrive at their destination.
-              </p>
+          <div className="text-center mb-14">
+            <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-2">
+              How We Work
+            </p>
+            <h2 className="text-4xl font-serif font-bold text-dark">Services</h2>
+          </div>
 
-              <ul className="space-y-3">
-                {[
-                  'Signature ribbon & paper wrapping',
-                  'Aqua box to keep blooms hydrated',
-                  'Craft bag for easy carrying',
-                  'Flower food & care instructions',
-                  'Complimentary note card',
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-sm text-dark-muted">
-                    <span className="w-5 h-5 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            {/* Image carousel */}
+            <div className="sticky top-8">
+              <ImageCarousel images={servicesImageList} />
             </div>
 
-            {/* Visual */}
-            <div className="relative">
-              <div className="bg-white rounded-3xl shadow-xl overflow-hidden aspect-square flex items-center justify-center">
+            {/* Right column: service cards + contact */}
+            <div className="flex flex-col gap-6">
+              {/* Service cards */}
+              {[
+                {
+                  title: 'Pre-Order & Freshness',
+                  body: "All our arrangements are made to order, with a minimum of 24 hours' notice. Since we purchase flowers specifically for each client, you are guaranteed the freshest blooms.",
+                },
+                {
+                  title: 'Personalized Arrangements',
+                  body: "When placing an order, you can select a composition and color palette that you love. Each bouquet is handcrafted and unique, as no two flowers are exactly alike. While we aim to capture the spirit of your chosen design, exact replicas are rarely possible. Ordering in advance helps us create a bouquet that closely matches your vision, tailored to your preferences, budget, and the freshest blooms available.\n\nAnd if you love our style, you will never be disappointed.",
+                },
+              ].map((item) => (
+                <div key={item.title} className="bg-cream rounded-3xl p-8 hover:shadow-md transition-shadow">
+                  <h3 className="font-serif font-semibold text-xl text-dark mb-4">{item.title}</h3>
+                  {item.body.split('\n\n').map((para, i) => (
+                    <p key={i} className={`text-muted leading-relaxed${i > 0 ? ' mt-4' : ''}`}>{para}</p>
+                  ))}
+                </div>
+              ))}
+
+              {/* Contact */}
+              <div className="bg-cream rounded-3xl p-8 hover:shadow-md transition-shadow">
+                <h3 className="font-serif font-semibold text-xl text-dark mb-6">Contact Us</h3>
+                <ul className="space-y-4">
+                  <li>
+                    <a
+                      href="mailto:fleuri.dlv@gmail.com"
+                      className="flex items-center gap-4 group"
+                    >
+                      <span className="w-10 h-10 rounded-full bg-blush-light flex items-center justify-center flex-shrink-0 group-hover:bg-primary transition-colors">
+                        <svg className="w-5 h-5 text-primary group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </span>
+                      <div>
+                        <p className="text-xs text-muted uppercase tracking-wider font-medium mb-0.5">Email</p>
+                        <p className="text-dark font-medium group-hover:text-primary transition-colors">fleuri.dlv@gmail.com</p>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://wa.me/33680869574"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 group"
+                    >
+                      <span className="w-10 h-10 rounded-full bg-blush-light flex items-center justify-center flex-shrink-0 group-hover:bg-primary transition-colors">
+                        <svg className="w-5 h-5 text-primary group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                        </svg>
+                      </span>
+                      <div>
+                        <p className="text-xs text-muted uppercase tracking-wider font-medium mb-0.5">WhatsApp</p>
+                        <p className="text-dark font-medium group-hover:text-primary transition-colors">+33 6 80 86 95 74</p>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://www.instagram.com/anastasia.a.florist/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 group"
+                    >
+                      <span className="w-10 h-10 rounded-full bg-blush-light flex items-center justify-center flex-shrink-0 group-hover:bg-primary transition-colors">
+                        <svg className="w-5 h-5 text-primary group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                      </span>
+                      <div>
+                        <p className="text-xs text-muted uppercase tracking-wider font-medium mb-0.5">Instagram</p>
+                        <p className="text-dark font-medium group-hover:text-primary transition-colors">@anastasia.a.florist</p>
+                      </div>
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── REVIEWS ────────────────────────────────────────────────── */}
-      <section className="py-20 bg-white hidden">
+      {/* ─── ORDERING INFORMATION ───────────────────────────────────── */}
+      <section className="py-20 bg-cream">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-2">
-              What Our Clients Say
+              Good to Know
             </p>
-            <h2 className="text-4xl font-serif font-bold text-dark">Reviews</h2>
-            <div className="flex items-center justify-center gap-1 mt-3">
-              {[...Array(5)].map((_, i) => (
-                <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-                <span className="ml-2 text-sm text-muted">280+ reviews</span>
-            </div>
+            <h2 className="text-4xl font-serif font-bold text-dark">Ordering Information</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="flex flex-wrap justify-center gap-8">
             {[
               {
-                name: 'Natalie M.',
-                text: "Absolutely stunning experience! The flowers were incredibly fresh and beautifully arranged. You can tell they use high-quality blooms — everything felt premium. Service was exceptional.",
-                date: 'a week ago',
+                title: 'Minimum Order',
+                body: 'The minimum order amount is €100.',
               },
               {
-                name: 'Alicia B.',
-                text: "I've been following this shop for over a year. They created a masterpiece for same-day delivery. Their online customer service was above and beyond. I'm a very happy customer!",
-                date: 'a month ago',
+                title: 'Free Delivery in Monaco',
+                body: 'We proudly provide free delivery within Monaco.',
               },
               {
-                name: 'Maria R.',
-                text: "My Favourite flower shop! Their bouquets are always breathtaking — elegant, fresh, and beautifully arranged. Deliveries are always right on time. I order only from them now!",
-                date: '2 months ago',
+                title: 'Nearby Delivery',
+                body: 'Delivery to neighboring towns such as Beausoleil, Cap-d\'Ail, Roquebrune-Cap-Martin, and nearby areas is available upon request. Delivery pricing is calculated individually depending on location.',
               },
-            ].map((review) => (
-              <div key={review.name} className="bg-cream rounded-3xl p-7">
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-sm text-dark-muted leading-relaxed mb-5 italic">"{review.text}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-blush-light rounded-full flex items-center justify-center text-sm font-bold text-primary">
-                    {review.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-dark">{review.name}</p>
-                    <p className="text-xs text-muted">{review.date}</p>
-                  </div>
-                </div>
+            ].map((item) => (
+              <div key={item.title} className="w-full md:w-[calc(33.333%-1.334rem)] bg-white rounded-3xl p-8 hover:shadow-md transition-shadow">
+                <h3 className="font-serif font-semibold text-lg text-dark mb-3">{item.title}</h3>
+                <p className="text-sm text-muted leading-relaxed">{item.body}</p>
               </div>
             ))}
           </div>

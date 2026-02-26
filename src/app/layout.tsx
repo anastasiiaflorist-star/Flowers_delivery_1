@@ -12,11 +12,11 @@ const jost = Jost({
 
 export const metadata: Metadata = {
   title: {
-    default: 'La Fleur — Luxury Flower Shop',
-    template: '%s | La Fleur',
+    default: 'Fleuri — Luxury Flower Shop',
+    template: '%s | Fleuri',
   },
   description:
-    'Luxury floral arrangements and bouquets crafted with love. Same-day delivery available. Fresh flowers from the Netherlands, Ecuador & Colombia.',
+    'Luxury floral arrangements and bouquets crafted with love. Fresh flowers from the Netherlands, Ecuador & Colombia.',
   keywords: ['flower shop', 'bouquets', 'floral arrangements', 'luxury flowers', 'flower delivery'],
 }
 

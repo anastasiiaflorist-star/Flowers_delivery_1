@@ -1,5 +1,5 @@
 // scripts/fix-data.mjs
-// Fixes: 1) delete stray drafts  2) fix flower-boxes → flowers-in-a-box category
+// Fixes: 1) delete stray drafts  2) fix flower-boxes → flowers in a box category
 // Run with: node scripts/fix-data.mjs
 
 import { createClient } from "@sanity/client";
@@ -25,8 +25,8 @@ async function run() {
     console.log(`  ✅ Deleted ${id}`);
   }
 
-  // 2. Fix wrong category value: flower-boxes → flowers-in-a-box
-  console.log('\n🔧 Fixing category "flower-boxes" → "flowers-in-a-box"...');
+  // 2. Fix wrong category value: flower-boxes → flowers in a box
+  console.log('\n🔧 Fixing category "flower-boxes" → "flowers in a box"...');
   const wrongCat = await client.fetch(
     '*[_type == "product" && category == "flower-boxes"]._id',
   );
@@ -34,7 +34,7 @@ async function run() {
     console.log("  No documents to fix.");
   }
   for (const id of wrongCat) {
-    await client.patch(id).set({ category: "flowers-in-a-box" }).commit();
+    await client.patch(id).set({ category: "flowers in a box" }).commit();
     console.log(`  ✅ Fixed ${id}`);
   }
 
