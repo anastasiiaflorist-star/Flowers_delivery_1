@@ -27,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={jost.variable}>
-      <body className="min-h-screen flex flex-col bg-cream font-sans">
+      <body className="min-h-screen flex flex-col bg-cream font-sans pt-[97px]">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

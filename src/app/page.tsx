@@ -63,10 +63,10 @@ export default async function HomePage() {
       <section className="relative flex items-center overflow-hidden" style={{ backgroundImage: "url('/hero-bg.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-white/55 backdrop-blur-[2px]" />
 
-        <div className="relative z-10 max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="relative z-10 max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 lg:py-20 py-10">
           {/* Text */}
           <div className="flex flex-col items-center gap-6">
-            <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-4">
+            <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-4 text-center">
               Luxury florist - FLOWER DELIVERY SERVICE
             </p>
             <h1 className="text-center text-5xl sm:text-6xl font-serif font-normal text-dark leading-snug tracking-wide mb-6">
@@ -79,9 +79,9 @@ export default async function HomePage() {
               Handcrafted luxury bouquets and arrangements made with the freshest blooms
               from around the world. Freshness guaranteed.
             </p>
-              <p className="text-primary font-semibold text-center text-lg text-muted max-w-[42rem] leading-relaxed mb-8">Bespoke bouquets for your most unforgettable moments</p>
+              <p className="text-primary font-semibold text-center text-lg text-muted max-w-[42rem] leading-relaxed mb-8">Bespoke bouquets for your most unforgettable moments.</p>
               </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 justify-center">
               <Link
                 href="/products"
                 className="inline-flex items-center gap-2 bg-primary text-white px-8 py-3.5 rounded-full font-medium hover:bg-primary-dark transition-colors shadow-md hover:shadow-lg"
@@ -100,11 +100,11 @@ export default async function HomePage() {
             </div>
 
             {/* Trust badges */}
-            <div className="flex flex-wrap gap-6 mt-10 pt-10 border-t border-blush-border">
+            <div className="flex flex-wrap gap-6 lg:mt-10 lg:pt-10 border-t border-blush-border mt-5 pt-5 justify-center sm:justify-start">
               {[
                 { label: 'Unique Designs' },
                 { label: 'Freshness Guaranteed' },
-                { label: 'Premium flowers' },
+                { label: 'Premium Flowers' },
               ].map((badge) => (
                 <div key={badge.label} className="flex items-center gap-2">
                   <span className="text-s text-muted font-medium">{badge.label}</span>
@@ -216,7 +216,7 @@ export default async function HomePage() {
       </section>
 
       {/* ─── SERVICES ───────────────────────────────────────────────── */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-cream" id="services">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-2">
@@ -244,7 +244,7 @@ export default async function HomePage() {
                   body: "When placing an order, you can select a composition and color palette that you love. Each bouquet is handcrafted and unique, as no two flowers are exactly alike. While we aim to capture the spirit of your chosen design, exact replicas are rarely possible. Ordering in advance helps us create a bouquet that closely matches your vision, tailored to your preferences, budget, and the freshest blooms available.\n\nAnd if you love our style, you will never be disappointed.",
                 },
               ].map((item) => (
-                <div key={item.title} className="bg-cream rounded-3xl p-8 hover:shadow-md transition-shadow">
+                <div key={item.title} className="bg-white rounded-3xl p-8 hover:shadow-md transition-shadow">
                   <h3 className="font-serif font-semibold text-xl text-dark mb-4">{item.title}</h3>
                   {item.body.split('\n\n').map((para, i) => (
                     <p key={i} className={`text-muted leading-relaxed${i > 0 ? ' mt-4' : ''}`}>{para}</p>
@@ -253,7 +253,7 @@ export default async function HomePage() {
               ))}
 
               {/* Contact */}
-              <div className="bg-cream rounded-3xl p-8 hover:shadow-md transition-shadow">
+              <div className="bg-white rounded-3xl p-8 hover:shadow-md transition-shadow">
                 <h3 className="font-serif font-semibold text-xl text-dark mb-6">Contact Us</h3>
                 <ul className="space-y-4">
                   <li>
@@ -316,7 +316,7 @@ export default async function HomePage() {
       </section>
 
       {/* ─── ORDERING INFORMATION ───────────────────────────────────── */}
-      <section className="py-20 bg-cream">
+      <section className="py-20 bg-white" id="ordering-information">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-2">
@@ -337,10 +337,10 @@ export default async function HomePage() {
               },
               {
                 title: 'Nearby Delivery',
-                body: 'Delivery to neighboring towns such as Beausoleil, Cap-d\'Ail, Roquebrune-Cap-Martin, and nearby areas is available upon request. Delivery pricing is calculated individually depending on location.',
+                body: "Delivery to neighboring towns such as Beausoleil, Cap-d'Ail, Roquebrune-Cap-Martin, and nearby areas is available upon request. Delivery pricing is calculated individually depending on location.",
               },
             ].map((item) => (
-              <div key={item.title} className="w-full md:w-[calc(33.333%-1.334rem)] bg-white rounded-3xl p-8 hover:shadow-md transition-shadow">
+              <div key={item.title} className="w-full md:w-[calc(33.333%-1.667rem)] text-center p-8 rounded-3xl bg-cream hover:shadow-md transition-shadow">
                 <h3 className="font-serif font-semibold text-lg text-dark mb-3">{item.title}</h3>
                 <p className="text-sm text-muted leading-relaxed">{item.body}</p>
               </div>

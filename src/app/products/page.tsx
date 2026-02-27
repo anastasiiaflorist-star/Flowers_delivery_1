@@ -96,7 +96,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 <a
                   key={cat.value}
                   href={buildHref(cat.value || undefined, sort)}
-                  className={`px-5 py-2 rounded-full border text-sm font-medium transition-colors ${
+                  className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-full border text-sm font-medium transition-colors ${
                     isActive
                       ? 'bg-primary border-primary text-white shadow-sm'
                       : 'border-blush-light text-dark-wine hover:bg-blush-light hover:border-blush-light'
@@ -108,7 +108,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             })}
             <a
               href="/table-styling"
-              className="px-5 py-2 rounded-full border text-sm font-medium transition-colors border-blush-light text-dark-wine hover:bg-blush-light hover:border-blush-light"
+              className="px-4 py-1.5 sm:px-5 sm:py-2 rounded-full border text-sm font-medium transition-colors border-blush-light text-dark-wine hover:bg-blush-light hover:border-blush-light"
             >
               Table Styling
             </a>
@@ -116,14 +116,16 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
           {/* Sort pills */}
           <div className="flex gap-2 items-center">
-            <span className="text-sm text-muted font-medium mr-1">Sort by:</span>
+            <span className="text-sm text-muted font-medium mr-1 hidden sm:inline">
+              Sort by:
+            </span>
             {SORT_OPTIONS.map((opt) => {
               const isActive = (sort || '') === opt.value
               return (
                 <a
                   key={opt.value}
                   href={buildHref(category, opt.value || undefined)}
-                  className={`px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
+                  className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-full border text-sm font-medium transition-colors ${
                     isActive
                       ? 'bg-primary border-primary text-white shadow-sm'
                       : 'border-blush-light text-dark-wine hover:bg-blush-light hover:border-blush-light'

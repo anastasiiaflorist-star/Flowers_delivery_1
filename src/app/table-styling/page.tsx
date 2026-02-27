@@ -50,14 +50,20 @@ export default async function TableStylingPage() {
   return (
     <div className="bg-cream min-h-screen">
       {/* Page header */}
-      <div className="bg-gradient-to-b from-blush-pale to-cream py-14 text-center">
-        <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-2">
-          Our Services
-        </p>
-        <h1 className="text-5xl font-serif font-bold text-dark mb-4">Table Styling</h1>
-        <p className="text-muted max-w-lg mx-auto">
-          Bespoke floral concepts designed to elevate your event.
-        </p>
+      <div
+        className="bg-gradient-to-b from-blush-pale to-cream py-14 text-center relative"
+        style={{ backgroundImage: 'url(/hero-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+      >
+        <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
+        <div className="relative mx-5ad">
+          <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-4 text-center">
+            Our Services
+          </p>
+          <h1 className="text-5xl font-serif font-bold text-dark mb-4">Table Styling</h1>
+          <p className="text-muted max-w-lg mx-auto">
+            Bespoke floral concepts designed to elevate your event
+          </p>
+        </div>
       </div>
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
