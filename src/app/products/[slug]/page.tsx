@@ -173,8 +173,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             {/* Guarantees */}
             <div className="border-t border-pink-100 mt-6 pt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
-                { label: '3-Day Freshness Guarantee' },
-                { label: 'Same-Day Delivery' },
+                { label: 'Freshness Guarantee' },
+                { label: 'Unique Design' },
                 { label: 'Gift Packaging Included' },
               ].map((item) => (
                 <div key={item.label} className="text-center">

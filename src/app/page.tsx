@@ -67,17 +67,20 @@ export default async function HomePage() {
           {/* Text */}
           <div className="flex flex-col items-center gap-6">
             <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-4">
-              Luxury Florist
+              Luxury florist - FLOWER DELIVERY SERVICE
             </p>
-            <h1 className="text-center text-5xl sm:text-6xl font-serif font-bold text-dark leading-tight mb-6">
+            <h1 className="text-center text-5xl sm:text-6xl font-serif font-normal text-dark leading-snug tracking-wide mb-6">
               Fresh Flowers<br />
               <span className="text-primary">Delivered</span><br />
-              With Love
+              <em>With Love</em>
             </h1>
-            <p className="text-center text-lg text-muted max-w-[42rem] leading-relaxed mb-8">
+           <div> 
+            <p className="text-center text-lg text-muted max-w-[42rem] leading-relaxeds">
               Handcrafted luxury bouquets and arrangements made with the freshest blooms
-              from around the world. Freshness Guaranteed.
+              from around the world. Freshness guaranteed.
             </p>
+              <p className="text-primary font-semibold text-center text-lg text-muted max-w-[42rem] leading-relaxed mb-8">Bespoke bouquets for your most unforgettable moments</p>
+              </div>
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/products"
@@ -181,7 +184,7 @@ export default async function HomePage() {
       <section className="py-20 bg-white">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
-            <h2 className="text-4xl font-serif font-bold text-dark">Why Choose Our Bouquets</h2>
+            <h2 className="text-4xl font-serif font-bold text-dark ">Why Choose Our Bouquets</h2>
           </div>
 
           <div className="flex flex-wrap justify-center gap-10">

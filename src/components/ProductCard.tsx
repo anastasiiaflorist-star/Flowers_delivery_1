@@ -26,17 +26,16 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Info */}
         <div className="p-4 flex flex-col flex-1">
-          <h3 className="font-serif font-semibold text-dark group-hover:text-primary transition-colors text-sm sm:text-base leading-snug">
+          <div className='flex flex-col justify-between flex-1 height-full'>
+            <h3 className="font-serif font-semibold text-dark group-hover:text-primary transition-colors text-sm sm:text-base leading-snug">
             {product.title}
           </h3>
-          {product.shortDescription && (
-            <p className="text-xs text-muted mt-1 line-clamp-2">{product.shortDescription}</p>
-          )}
           {product.category && (
             <p className="text-xs text-primary mt-1 uppercase tracking-wide font-medium">
               {product.category.replaceAll('-', ' ')}
             </p>
           )}
+          </div>
           <p className="mt-auto pt-3 text-base font-semibold text-dark">
             €{product.price.toFixed(2)}
           </p>

@@ -12,7 +12,7 @@ interface ImageCarouselProps {
 
 export default function ImageCarousel({
   images,
-  aspectClass = 'aspect-[4/5]',
+  aspectClass = 'w-full aspect-[4/5] md:w-[70%] lg:w-full mx-auto',
   className = '',
 }: ImageCarouselProps) {
   const [index, setIndex] = useState(0)
