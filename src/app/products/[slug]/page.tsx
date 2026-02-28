@@ -40,10 +40,43 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
   const { slug } = params
   const product = await getProduct(slug)
-  if (!product) return { title: 'Product Not Found' }
+  if (!product) {
+    return {
+      title: 'Product Not Found',
+      robots: { index: false, follow: false },
+    }
+  }
+  const description =
+    product.shortDescription || `${product.title} — a luxury floral arrangement handcrafted by Fleuri.`
+  const ogImage =
+    product.images?.[0]
+      ? urlFor(product.images[0]).width(1200).height(630).fit('crop').url()
+      : '/og-image.jpg'
   return {
     title: product.title,
-    description: product.shortDescription || `${product.title} — luxury floral arrangement by Fleuri.`,
+    description,
+    keywords: [
+      product.title,
+      product.category ?? '',
+      'luxury bouquet',
+      'fresh flowers',
+      'flower gift',
+      'Fleuri',
+    ].filter(Boolean),
+    alternates: { canonical: `/products/${slug}` },
+    openGraph: {
+      title: `${product.title} | Fleuri`,
+      description,
+      url: `/products/${slug}`,
+      type: 'website',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: product.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${product.title} | Fleuri`,
+      description,
+      images: [ogImage],
+    },
   }
 }
 

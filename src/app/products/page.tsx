@@ -8,8 +8,32 @@ import type { Metadata } from 'next'
 export const dynamic = 'force-dynamic' // category filtering via searchParams
 
 export const metadata: Metadata = {
+  title: 'Our Flowers',
   description:
     'Browse our complete collection of luxury bouquets, flower boxes, gifts, and arrangements. Handcrafted with the freshest blooms from around the world. Every arrangement made with love.',
+  keywords: [
+    'buy flowers online',
+    'luxury bouquets',
+    'flower boxes',
+    'floral gifts',
+    'fresh flower arrangements',
+    'flower shop Ireland',
+  ],
+  alternates: { canonical: '/products' },
+  openGraph: {
+    title: 'Our Flowers | Fleuri',
+    description:
+      'Browse our complete collection of luxury bouquets, flower boxes, gifts, and arrangements. Handcrafted with the freshest blooms from around the world.',
+    url: '/products',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Fleuri Flower Collection' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Our Flowers | Fleuri',
+    description:
+      'Browse our complete collection of luxury bouquets, flower boxes, gifts, and arrangements.',
+    images: ['/og-image.jpg'],
+  },
 }
 
 const CATEGORIES = [

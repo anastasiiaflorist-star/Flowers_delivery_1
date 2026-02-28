@@ -11,6 +11,29 @@ export const metadata: Metadata = {
   title: 'Table Styling',
   description:
     'Elegant floral table styling for celebrations, intimate dinners and sophisticated gatherings. Bespoke floral concepts tailored to your event.',
+  keywords: [
+    'floral table styling',
+    'wedding table flowers',
+    'event floral design',
+    'table centerpieces',
+    'bespoke floral arrangements',
+    'dinner table flowers',
+  ],
+  alternates: { canonical: '/table-styling' },
+  openGraph: {
+    title: 'Table Styling | Fleuri',
+    description:
+      'Elegant floral table styling for celebrations, intimate dinners and sophisticated gatherings. Bespoke floral concepts tailored to your event.',
+    url: '/table-styling',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Fleuri Table Styling' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Table Styling | Fleuri',
+    description:
+      'Elegant floral table styling for celebrations, intimate dinners and sophisticated gatherings.',
+    images: ['/og-image.jpg'],
+  },
 }
 
 interface TableStylingData {
@@ -55,7 +78,7 @@ export default async function TableStylingPage() {
         style={{ backgroundImage: 'url(/hero-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
         <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
-        <div className="relative mx-5ad">
+        <div className="relative mx-5">
           <p className="text-sm font-medium tracking-[0.2em] text-primary uppercase mb-4 text-center">
             Our Services
           </p>
