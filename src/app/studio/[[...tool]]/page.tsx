@@ -6,5 +6,5 @@ import config from '../../../../sanity.config'
 export const dynamic = 'force-dynamic'
 
 export default function StudioPage() {
-  return <NextStudio config={config} />
+  return <div className='mt-[100px]'><NextStudio config={config} /></div>
 }
